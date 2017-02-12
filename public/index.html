@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Hold Shift to Check Multiple Checkboxes</title>
+    </head>
+
+    <body>
+        <style>
+            html {
+                font-family: sans-serif;
+                background: red;
+            }
+
+            .inbox {
+                max-width: 400px;
+                margin: 50px auto;
+                background: white;
+                border-radius: 5px;
+                box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+            }
+
+            .item {
+                display: flex;
+                align-items: center;
+                border-bottom: 1px solid #F1F1F1;
+            }
+
+            .item:last-child {
+                border-bottom: 0;
+            }
+
+            input:checked+p {
+                background: #F9F9F9;
+                text-decoration: line-through;
+            }
+
+            input[type="checkbox"] {
+                margin: 20px;
+            }
+
+            p {
+                margin: 0;
+                padding: 20px;
+                transition: background 0.6s;
+                flex: 1;
+                font-family: 'helvetica neue';
+                font-size: 20px;
+                font-weight: 200;
+                border-left: 1px solid #D1E2FF;
+            }
+
+            .details {
+                text-align: center;
+                font-size: 15px;
+            }
+        </style>
+
+        <div class="inbox">
+            <div class="item">
+                <input type="checkbox" id='1'>
+                <p>Checkbox Numero 1</p>
+            </div>
+            <div class="item">
+                <input type="checkbox" id='2'>
+                <p>Checkbox Numero 2</p>
+            </div>
+            <div class="item">
+                <input type="checkbox" id='3'>
+                <p>Checkbox Numero 3</p>
+            </div>
+            <div class="item">
+                <input type="checkbox" id='4'>
+                <p>Checkbox Numero 4</p>
+            </div>
+            <div class="item">
+                <input type="checkbox" id='5'>
+                <p>Checkbox Numero 5</p>
+            </div>
+            <div class="item">
+                <input type="checkbox" id='6'>
+                <p>Checkbox Numero 6</p>
+            </div>
+            <div class="item">
+                <input type="checkbox" id='7'>
+                <p>Checkbox Numero 7</p>
+            </div>
+            <div class="item">
+                <input type="checkbox" id='8'>
+                <p>Checkbox Numero 8</p>
+            </div>
+            <div class="item">
+                <input type="checkbox" id='9'>
+                <p>Checkbox Numero 9</p>
+            </div>
+        </div>
+
+        <script>
+            (function() {
+
+
+                let keyIsDown;
+                let keyIsUp;
+                let lastClicked;
+                const boxes = [...document.querySelectorAll('input[type=checkbox]')];
+
+
+                /*------------keeps track of lastClicked---*/
+                function clicked(e) {
+                    lastClicked = e.target;
+                    console.log(lastClicked);
+
+                }
+
+
+                /*------------main function that auto-selects boxes when shift-click happens----*/
+                function currentBox(e) {
+                    let arry = [];
+                    let barry = [];
+
+                    /*------------If you shift-click below lastClicked----*/
+                    if (e.target.id > lastClicked.id) {
+
+
+                        for (var box of boxes) {
+                            if (box.id < e.target.id && box.id > lastClicked.id) {
+                                arry.push(box);
+                            }
+
+                        }
+                        /*---Flip array--*/
+                        arry.reverse();
+
+                        for (var item of arry) {
+                            if (!item.checked) {
+                                barry.push(item);
+                            } else {
+                                continue;
+                            }
+                        }
+
+                        for (var thing of barry) {
+                            thing.checked = 'true';
+
+                        }
+                        console.log(barry);
+                        console.log(lastClicked);
+
+
+                        /*------------If you shift-click below lastClicked----*/
+                    } else if (e.target.id < lastClicked.id) {
+
+                        for (var box of boxes) {
+                            if (box.id > e.target.id && box.id < lastClicked.id) {
+                                arry.push(box);
+                            }
+                        }
+
+                        for (var item of arry) {
+                            if (!item.checked) {
+                                barry.push(item);
+                            } else {
+                                continue;
+                            }
+                        }
+                        for (var thing of barry) {
+                            thing.checked = 'true';
+                        }
+
+                    }
+
+                }
+
+
+                /*------------function listens for shift being held down---*/
+                function keypress(e) {
+
+                    if (e.key === 'Shift') {
+                        keyIsDown = true;
+                        /*----listner when shift is down--*/
+                        boxes.forEach(function(box) {
+                            box.removeEventListener('click', clicked)
+                        })
+
+                    }
+
+                    boxes.forEach(function(box) {
+                        box.addEventListener('click', currentBox)
+                    })
+
+                }
+
+                function keyup(e) {
+
+                    if (e.key === "Shift") {
+
+                        keyIsDown = false;
+                        console.log('shift released');
+                        console.log(keyIsDown);
+
+                        /*----re-add listner when shift is up--*/
+                        boxes.forEach(function(box) {
+                            box.addEventListener('click', clicked)
+                        })
+                    }
+
+                    boxes.forEach(function(box) {
+                        box.removeEventListener('click', currentBox)
+                    })
+
+                }
+
+
+                /*----add initial listener when page loads--*/
+                boxes.forEach(function(box) {
+                        box.addEventListener('click', clicked)
+                    })
+                    /*----add window listerners for keydown or keyup--*/
+                window.addEventListener("keydown", keypress);
+                window.addEventListener('keyup', keyup)
+
+
+            })();
+        </script>
+    </body>
+
+</html>
+
+
+</html>
